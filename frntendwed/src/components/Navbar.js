@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Password from "./Password";
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 
 import {
   Collapse,
@@ -33,7 +33,7 @@ const Example = () => {
   return (
     <div>
       <Navbar color="light" light expand="md">
-        <NavbarBrand href="#home">Home</NavbarBrand>
+        <NavbarBrand href="#">Home</NavbarBrand>
         <NavbarToggler aria-controls="basic-navbar-nav" onClick={toggle} />
         <Collapse id="basic-navbar-nav" isOpen={isOpen} navbar>
           <Nav className="mr-auto" navbar>
@@ -43,8 +43,13 @@ const Example = () => {
               </NavLink>
             </NavItem>
             <NavItem>
-              <NavLink as={Link} to="/about">
-                About
+              <NavLink>
+                <Link to="/about">About</Link>
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink to="/products">
+                <Link to="/products">Products</Link>
               </NavLink>
             </NavItem>
             <UncontrolledDropdown nav inNavbar>
@@ -90,6 +95,8 @@ const Example = () => {
           </Button>
         </ModalFooter>
       </Modal>
+
+      <Outlet />
     </div>
   );
 };
