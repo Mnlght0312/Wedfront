@@ -38,8 +38,8 @@ const Example = () => {
         <Collapse id="basic-navbar-nav" isOpen={isOpen} navbar>
           <Nav className="mr-auto" navbar>
             <NavItem>
-              <NavLink as={Link} to="/contact">
-                Contact
+              <NavLink>
+                <Link to="/contact">Contact</Link>
               </NavLink>
             </NavItem>
             <NavItem>
@@ -57,15 +57,15 @@ const Example = () => {
                 Menu
               </DropdownToggle>
               <DropdownMenu right>
-                <DropdownItem as={Link} to="/team">
-                  Our Team
+                <DropdownItem>
+                  <Link to="/team">Our Team</Link>
                 </DropdownItem>
-                <DropdownItem as={Link} to="/support">
-                  Supports
+                <DropdownItem>
+                  <Link to="/support">Supports</Link>
                 </DropdownItem>
                 <DropdownItem divider />
-                <DropdownItem as={Link} to="/donation">
-                  Donation
+                <DropdownItem>
+                  <Link to="/donation">Donation</Link>
                 </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
@@ -91,7 +91,7 @@ const Example = () => {
             Cancel
           </Button>
           <Button color="danger" onClick={toggleModal}>
-            Go to Admin Panel
+            <Link to="/adminLayout">Go to the Admin panel</Link>
           </Button>
         </ModalFooter>
       </Modal>
