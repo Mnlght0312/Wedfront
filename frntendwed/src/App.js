@@ -9,6 +9,7 @@ import Donation from "./components/Donation";
 import Contact from "./components/Contact";
 import About from "./components/About";
 import Products from "./components/Products";
+import AdminLayout from "./products/AdminLayout";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
           <Route path="/products" element={<Products />} />
+          <Route path="/adminLayout" element={<AdminLayout />} />
         </Route>
       </Routes>
     </div>
