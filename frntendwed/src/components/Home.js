@@ -1,5 +1,4 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import {
   Container,
@@ -16,12 +15,20 @@ import {
   Input,
   Label,
   Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
 } from "reactstrap";
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchTermEmpty, setSearchTermEmpty] = useState(true);
+  const [editModal, setEditModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState({});
 
   useEffect(() => {
     axios
@@ -36,17 +43,47 @@ const HomePage = () => {
   }, []);
 
   const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-    setFilteredProducts(
-      products.filter(
-        (product) =>
-          product.productName
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase()) ||
-          product.price.toString().includes(searchTerm) ||
-          product.InStock.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    );
+    const newSearchTerm = e.target.value;
+    setSearchTerm(newSearchTerm);
+    setSearchTermEmpty(newSearchTerm === "");
+
+    if (searchTermEmpty) {
+      setFilteredProducts(products);
+    } else {
+      setFilteredProducts(
+        products.filter(
+          (product) =>
+            product.productName
+              .toLowerCase()
+              .includes(newSearchTerm.toLowerCase()) ||
+            product.price.toString().includes(newSearchTerm) ||
+            product.InStock.toLowerCase().includes(newSearchTerm.toLowerCase())
+        )
+      );
+    }
+  };
+
+  const handleEdit = (product) => {
+    setSelectedProduct(product);
+    setEditModal(true);
+  };
+
+  const handleDelete = (product) => {
+    setSelectedProduct(product);
+    setDeleteModal(true);
+  };
+
+  const handleConfirmDelete = () => {
+    axios
+      .delete(`http://localhost:8080/api/product/${selectedProduct._id}`)
+      .then((res) => {
+        setProducts(products.filter((p) => p._id !== selectedProduct._id));
+        setFilteredProducts(filteredProducts.filter((p) => p._id !== selectedProduct._id));
+        setDeleteModal(false);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   return (
@@ -57,30 +94,91 @@ const HomePage = () => {
           <Input
             type="text"
             name="search"
-            id="search"
-            placeholder="Search..."
-            value={searchTerm}
-            onChange={handleSearch}
-          />
-          <Button style={{ backgroundColor: "green" }}>Search</Button>
-        </FormGroup>
-      </Form>
-      <Row>
-        {filteredProducts.map((product) => (
-          <Col xs="4">
-            <Card style={{ backgroundColor: "gray" }}>
-              <CardImg src={product.thumbImage} />
-              <CardBody>
-                <CardTitle> Name : {product.productName}</CardTitle>
-                <CardSubtitle>{product.price}$</CardSubtitle>
-                <CardText>In stock: {product.InStock}</CardText>
-              </CardBody>
-            </Card>
-          </Col>
-        ))}
-      </Row>
-    </Container>
-  );
+id="search"
+value={searchTerm}
+onChange={handleSearch}
+placeholder="Search by name, price or in-stock status"
+/>
+</FormGroup>
+</Form>
+<Row>
+{filteredProducts.map((product) => (
+<Col key={product._id} xs="12" sm="6" md="4">
+<Card>
+<CardImg top width="100%" src={product.image} alt="Product image" />
+<CardBody>
+<CardTitle>{product.productName}</CardTitle>
+<CardSubtitle>${product.price}</CardSubtitle>
+<CardText>In stock: {product.InStock ? "Yes" : "No"}</CardText>
+<Button color="primary" onClick={() => handleEdit(product)}>
+Edit
+</Button>{" "}
+<Button color="danger" onClick={() => handleDelete(product)}>
+Delete
+</Button>
+</CardBody>
+</Card>
+</Col>
+))}
+</Row>
+<Modal isOpen={editModal} toggle={() => setEditModal(false)}>
+<ModalHeader toggle={() => setEditModal(false)}>Edit product</ModalHeader>
+<ModalBody>
+<Form>
+<FormGroup>
+<Label for="productName">Product Name</Label>
+<Input
+type="text"
+name="productName"
+id="productName"
+value={selectedProduct.productName}
+placeholder="Enter product name"
+onChange={(e) =>
+setSelectedProduct({ ...selectedProduct, productName: e.target.value })
+}
+/>
+</FormGroup>
+<FormGroup>
+<Label for="price">Price</Label>
+<Input
+type="number"
+name="price"
+id="price"
+value={selectedProduct.price}
+placeholder="Enter price"
+onChange={(e) =>
+setSelectedProduct({ ...selectedProduct, price: e.target.value })
+}
+/>
+</FormGroup>
+<FormGroup>
+<Label for="InStock">In Stock</Label>
+<Input
+type="select"
+name="InStock"
+id="InStock"
+value={selectedProduct.InStock}
+onChange={(e) =>
+setSelectedProduct({ ...selectedProduct, InStock: e.target.value })
+}
+>
+<option value={true}>Yes</option>
+<option value={false}>No</option>
+</Input>
+</FormGroup>
+</Form>
+</ModalBody>
+<ModalFooter>
+<Button color="primary" onClick={() => setEditModal(false)}>
+Save Changes
+</Button>{" "}
+<Button color="secondary" onClick={() => setEditModal(false)}>
+Cancel
+</Button>
+</ModalFooter>
+</Modal>
+</Container>
+</>
+)
 };
-
-export default HomePage;
+export default Products;
