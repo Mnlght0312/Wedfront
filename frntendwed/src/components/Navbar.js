@@ -33,7 +33,10 @@ const Example = () => {
   return (
     <div>
       <Navbar color="light" light expand="md">
-        <NavbarBrand href="#">Home</NavbarBrand>
+        <NavbarBrand>
+          <Link to="/home">Home</Link>
+        </NavbarBrand>
+
         <NavbarToggler aria-controls="basic-navbar-nav" onClick={toggle} />
         <Collapse id="basic-navbar-nav" isOpen={isOpen} navbar>
           <Nav className="mr-auto" navbar>
