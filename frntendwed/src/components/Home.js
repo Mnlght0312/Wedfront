@@ -32,16 +32,21 @@ const HomePage = () => {
   const [selectedProduct, setSelectedProduct] = useState({});
 
   useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = () => {
     axios
       .get("http://localhost:8080/api/product")
       .then((res) => {
+        console.log(res, "updated");
         setProducts(res.data.result);
         setFilteredProducts(res.data.result);
       })
       .catch((err) => {
         console.error(err);
       });
-  }, []);
+  };
 
   const handleSearch = (e) => {
     const newSearchTerm = e.target.value;
@@ -76,12 +81,18 @@ const HomePage = () => {
 
   const handleConfirmDelete = () => {
     axios
-      .delete(`http://localhost:8080/api/product/${selectedProduct.id}`)
+      .delete(
+        `http://localhost:8080/api/product/${selectedProduct.id}`,
+        selectedProduct
+      )
       .then((res) => {
-        setProducts(products.filter((p) => p.id !== selectedProduct.id));
-        setFilteredProducts(
-          filteredProducts.filter((p) => p.id !== selectedProduct.id)
-        );
+        if (res.data.result) {
+          getData();
+        }
+        // setProducts(products.filter((p) => p._id !== selectedProduct._id));
+        // setFilteredProducts(
+        //   filteredProducts.filter((p) => p._id !== selectedProduct._id)
+        // );
         setDeleteModal(false);
       })
       .catch((err) => {
@@ -95,11 +106,16 @@ const HomePage = () => {
         selectedProduct
       )
       .then((res) => {
-        const updatedProducts = products.map((p) =>
-          p.id === selectedProduct.id ? selectedProduct : p
-        );
-        setProducts(updatedProducts);
-        setFilteredProducts(updatedProducts);
+        console.log(res.data);
+        if (res.data.status) {
+          getData();
+        }
+
+        // const updatedProducts = products.map((p) =>
+        //   p._id === selectedProduct._id ? selectedProduct : p
+        // );
+        // setProducts(updatedProducts);
+        // setFilteredProducts(updatedProducts);
         setEditModal(false);
       })
       .catch((err) => {
