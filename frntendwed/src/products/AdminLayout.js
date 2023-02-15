@@ -133,6 +133,13 @@ const AddProductMain = () => {
                       className="form-control"
                       rows="7"
                       required
+                      value={productItem.description}
+                      onChange={(e) =>
+                        setProductItem({
+                          ...productItem,
+                          description: e.target.value,
+                        })
+                      }
                     ></textarea>
                   </div>
                   <div className="mb-4">

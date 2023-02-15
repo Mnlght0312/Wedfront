@@ -156,6 +156,7 @@ const HomePage = () => {
                   <CardText>
                     In stock: {product.InStock}
                   </CardText>
+                  <CardSubtitle>{product.description}</CardSubtitle>
                   <Button color="primary" onClick={() => handleEdit(product)}>
                     Edit
                   </Button>{" "}
@@ -221,6 +222,22 @@ const HomePage = () => {
                 >
                 
                 </Input>
+              </FormGroup>
+              <FormGroup>
+                <Label for="description">Description</Label>
+                <Input
+                  type="textarea"
+                  name="description"
+                  id="description"
+                  value={selectedProduct.description}
+                  placeholder="Enter your description"
+                  onChange={(e) =>
+                    setSelectedProduct({
+                      ...selectedProduct,
+                      description: e.target.value,
+                    })
+                  }
+                />
               </FormGroup>
             </Form>
           </ModalBody>
