@@ -63,7 +63,7 @@ const HomePage = () => {
               .toLowerCase()
               .includes(newSearchTerm.toLowerCase()) ||
             product.price.toString().includes(newSearchTerm) ||
-            product.InStock.toLowerCase().includes(newSearchTerm.toLowerCase())
+            product.InStock.toString().includes(newSearchTerm)
         )
       );
     }
@@ -122,6 +122,7 @@ const HomePage = () => {
         console.error(err);
       });
   };
+  
 
   return (
     <>
@@ -153,7 +154,7 @@ const HomePage = () => {
                   <CardTitle>{product.productName}</CardTitle>
                   <CardSubtitle>${product.price}</CardSubtitle>
                   <CardText>
-                    In stock: {product.InStock ? "Yes" : "No"}
+                    In stock: {product.InStock}
                   </CardText>
                   <Button color="primary" onClick={() => handleEdit(product)}>
                     Edit
@@ -207,7 +208,7 @@ const HomePage = () => {
               <FormGroup>
                 <Label for="InStock">In Stock</Label>
                 <Input
-                  type="select"
+                  type="number"
                   name="InStock"
                   id="InStock"
                   value={selectedProduct.InStock}
@@ -218,8 +219,7 @@ const HomePage = () => {
                     })
                   }
                 >
-                  <option value={true}>Yes</option>
-                  <option value={false}>No</option>
+                
                 </Input>
               </FormGroup>
             </Form>
